@@ -1,31 +1,32 @@
 const User = require('../../db/models/users/userSchema');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { secret } = require('./config');
+const { secret } = require('../../../config');
 
 const generateAccessToken = (id) => {
   const payload = { id };
-  return jwt.sign(payload, secret, {expiresIn: "24h"});
-} 
+  return jwt.sign(payload, secret, { expiresIn: '24h' });
+};
 
-module.exports.autorisationUser = (req, res, next) => {
+module.exports.authorizationUser = (req, res, next) => {
   const { login, password } = req.body;
 
   if (req.body.hasOwnProperty('login') && req.body.hasOwnProperty('password')) {
     User.findOne({ login }).then((result) => {
-      if(result) {
+
+      if (result) {
         const validPassword = bcrypt.compareSync(password, result.password);
         if (!validPassword) {
-          res.status(404).send('Введен не верный пароль');
+          res.status(404).send('Wrong password');
         }
         const token = generateAccessToken(result._id);
         res.send({ token });
-      }else {
-        res.status(404).send(`Пользователь ${login} не найден`);
+      } else {
+        res.status(404).send(`A user ${login} is not found`);
       }
-      })
+    });
   } else {
-    res.status(404).send('Autorisation error');
+    res.status(404).send('Authorization error');
   }
 };
 
@@ -35,11 +36,13 @@ module.exports.registrationUser = (req, res, next) => {
     const hashPassword = bcrypt.hashSync(password, 7);
     const user = new User({ login, password: hashPassword });
     User.findOne({ login }).then((result) => {
-      if(result) {
-        res.status(404).send('Пользователь с таким именем уже существует');
-      }else {
+
+      if (result) {
+        res.status(404).send('A user with the same name already exists');
+      } else {
         user.save().then((result) => {
-          res.send({ data: result });
+          const token = generateAccessToken(result._id);
+          res.send({ data: result, token });
         });
       }
     });

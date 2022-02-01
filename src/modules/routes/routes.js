@@ -2,12 +2,12 @@ const express = require('express');
 const router = express.Router();
 
 const {
-	autorisationUser,
+	authorizationUser,
 	registrationUser,
 } = require('../controllers/usersController');
 
 //Users Routes
-router.post('/autorisation', autorisationUser);
+router.post('/authorization', authorizationUser);
 router.post('/registration', registrationUser);
 
 module.exports = router;

@@ -22,6 +22,9 @@ lib-cov
 coverage
 *.lcov
 
+# Secret for JWT token
+config.js
+
 # nyc test coverage
 .nyc_output
 
