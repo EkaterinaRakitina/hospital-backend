@@ -2,12 +2,12 @@ const express = require('express');
 const router = express.Router();
 
 const {
-	getAllUsers,
-	createNewUser,
+	autorisationUser,
+	registrationUser,
 } = require('../controllers/usersController');
 
 //Users Routes
-router.get('/autorisation', getAllUsers);
-router.post('/registration', createNewUser);
+router.post('/autorisation', autorisationUser);
+router.post('/registration', registrationUser);
 
 module.exports = router;
