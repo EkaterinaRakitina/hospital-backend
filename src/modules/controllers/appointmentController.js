@@ -1,1 +1,0 @@
-const Appointment = require('../../db/models/users/appointmentSchema');
